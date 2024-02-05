@@ -1,7 +1,6 @@
-
-
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
+  ActivityIndicator,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -9,12 +8,34 @@ import {
   View,
 } from 'react-native';
 
-
+import { setupPlayer, addTrack } from '../musicPlayerServices';
 
 
 
 function App(): React.JSX.Element {
+  const [isPlayerReady, setIsPlayerReady] = useState(false)
 
+  async function setup() {
+    let isSetup = await setupPlayer()
+
+    if(isSetup){
+      await addTrack()
+    }
+
+    setIsPlayerReady(isSetup)
+  }
+
+  useEffect( () => {
+    setup()
+  },[])
+
+  if(!isPlayerReady) {
+    return(
+      <SafeAreaView>
+        <ActivityIndicator/>
+      </SafeAreaView>
+    )
+  }
 
   return (
     <SafeAreaView>
@@ -26,6 +47,9 @@ function App(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  }
   
 });
 
@@ -44,6 +68,10 @@ export default App;
  - import playbackServices from created musicPlayerServices
  - need to register playbackService
 
+ in App.tsx
+ - install vector icons add needed line in gradle
+ - import setUpPlayer and addTrack from musicPlayerServices
+ - 
 
 
 
